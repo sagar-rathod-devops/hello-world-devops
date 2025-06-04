@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: hello-world-deployment
+  name: hello-world
 spec:
   replicas: 1
   selector:
@@ -14,6 +14,7 @@ spec:
     spec:
       containers:
       - name: hello-world
-        image: 248189939111.dkr.ecr.us-east-1.amazonaws.com/hello-world-devops:v1.1
+        image: 248189939111.dkr.ecr.us-east-1.amazonaws.com/hello-world-devops:latest
+        imagePullPolicy: Always
         ports:
         - containerPort: 8000

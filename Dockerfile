@@ -1,11 +1,10 @@
 FROM golang:1.23
-
 WORKDIR /app
-
 COPY . .
+RUN go build -o hello
 
-RUN go build -o main .
-
+FROM alpine:latest
+WORKDIR /root/
+COPY --from=builder /app/hello .
 EXPOSE 8000
-
-CMD ["./main"]
+CMD ["./hello"]
