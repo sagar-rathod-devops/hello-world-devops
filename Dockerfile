@@ -8,6 +8,6 @@ RUN go build -o hello
 # Stage 2: Run the binary with a minimal image
 FROM alpine:latest
 WORKDIR /root/
-COPY --from=builder /app/hello .
+COPY . .
 EXPOSE 8000
 CMD ["./hello"]
