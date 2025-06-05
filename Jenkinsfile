@@ -9,33 +9,10 @@ pipeline {
         IMAGE_TAG = "${BUILD_NUMBER}"
     }
 
-    parameters {
-        booleanParam(name: 'CREATE_CLUSTER', defaultValue: false, description: 'Create EKS cluster if not already created')
-    }
-
     stages {
         stage('Checkout') {
             steps {
                 git branch: 'main', url: 'https://github.com/sagar-rathod-devops/hello-world-devops.git'
-            }
-        }
-
-        stage('Create EKS Cluster') {
-            when {
-                expression { return params.CREATE_CLUSTER == true }
-            }
-            steps {
-                sh '''
-                    eksctl create cluster \
-                      --name $CLUSTER_NAME \
-                      --region $AWS_REGION \
-                      --nodegroup-name linux-nodes \
-                      --node-type t3.medium \
-                      --nodes 2 \
-                      --nodes-min 1 \
-                      --nodes-max 3 \
-                      --managed
-                '''
             }
         }
 
@@ -69,7 +46,7 @@ pipeline {
             steps {
                 sh '''
                     aws eks --region $AWS_REGION update-kubeconfig --name $CLUSTER_NAME
-                    kubectl set image deployment/hello-world hello-world=${ECR_URI}:${IMAGE_TAG}
+                    kubectl set image deployment/hello-world hello-world=${ECR_URI}:${IMAGE_TAG} || true
                 '''
             }
         }
